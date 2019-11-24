@@ -74,7 +74,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import Axios from "axios";
 
 @Component
-export default class HelloWorld extends Vue {
+export default class Converter extends Vue {
   @Prop() private msg!: string;
   private image: any = null;
   private imageURL: string = "";
@@ -118,7 +118,7 @@ export default class HelloWorld extends Vue {
           // that falls out of the range of 2xx
           console.log(error.response.data);
           console.log(error.response.status);
-          console.log(error.response.headers);
+          // console.log(error.response.headers);
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
