@@ -82,7 +82,7 @@ export default class Converter extends Vue {
   private imageURL: string = "";
 
   public imageInputChanged(event: Event) {
-    var input: any = event.target;
+    const input: any = event.target;
     if (input.files && input.files[0]) {
       this.image = input.files[0];
       this.imageURL = URL.createObjectURL(this.image);
