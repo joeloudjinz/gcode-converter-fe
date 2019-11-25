@@ -13,55 +13,55 @@
     <form @submit="submit">
       <div>
         <label for="toolDiameter">Tool Diameter</label>
-        <input id="toolDiameter" type="number" v-model="toolDiameter" />
+        <input id="toolDiameter" type="number" v-model="parameters.toolDiameter" />
       </div>
       <div>
         <label for="sensitivity">Sensitivity</label>
-        <input type="number" v-model="sensitivity" min="0" max="1" step="0.01" />
+        <input type="number" v-model="parameters.sensitivity" min="0" max="1" step="0.01" />
       </div>
       <div>
         <label for="scaleAxes">Scale Axes</label>
-        <input type="number" v-model="scaleAxes" />
+        <input type="number" v-model="parameters.scaleAxes" />
       </div>
       <div>
         <label for="deepStep">Deep Step</label>
-        <input type="number" v-model="deepStep" />
+        <input type="number" v-model="parameters.deepStep" />
       </div>
       <div>
         <label for="whiteZ">White Z</label>
-        <input type="number" v-model="whiteZ" />
+        <input type="number" v-model="parameters.whiteZ" />
       </div>
       <div>
         <label for="blackZ">Black Z</label>
-        <input type="number" v-model="blackZ" />
+        <input type="number" v-model="parameters.blackZ" />
       </div>
       <div>
         <label for="safeZ">Safe Z</label>
-        <input type="number" v-model="safeZ" />
+        <input type="number" v-model="parameters.safeZ" />
       </div>
       <div>
         Feed rate
         <div>
           <label for="work">Work</label>
-          <input type="number" v-model="work" />
+          <input type="number" v-model="parameters.work" />
         </div>
         <div>
           <label for="idle">Idle</label>
-          <input type="number" v-model="idle" />
+          <input type="number" v-model="parameters.idle" />
         </div>
       </div>
       <div>
         Laser mode
-        <input type="checkbox" v-model="laserMode" />
+        <input type="checkbox" v-model="parameters.laserMode" />
       </div>
-      <div v-if="laserMode">
+      <div v-if="parameters.laserMode">
         <div>
           <label for="safeZ">Command Power On</label>
-          <input type="text" v-model="powerOn" />
+          <input type="text" v-model="parameters.powerOn" />
         </div>
         <div>
           <label for="safeZ">Command Power Off</label>
-          <input type="text" v-model="powerOff" />
+          <input type="text" v-model="parameters.powerOff" />
         </div>
       </div>
       <input type="submit" />
@@ -71,40 +71,27 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { ConversionParameters } from "@/classes/parameters";
 import Axios from "axios";
 
 @Component
 export default class Converter extends Vue {
   @Prop() private msg!: string;
+  private parameters: ConversionParameters = new ConversionParameters();
   private image: any = null;
   private imageURL: string = "";
-  private toolDiameter: number = 1;
-  private sensitivity: number = 0.95;
-  private scaleAxes: number = 150;
-  private deepStep: number = -1;
-  private whiteZ: number = 0;
-  private blackZ: number = -2;
-  private safeZ: number = 2;
-  private work: number = 3000;
-  private idle: number = 1200;
-  private laserMode: boolean = false;
-  private powerOn: string = "M04";
-  private powerOff: string = "M05";
 
   public imageInputChanged(event: Event) {
     var input: any = event.target;
     if (input.files && input.files[0]) {
       this.image = input.files[0];
       this.imageURL = URL.createObjectURL(this.image);
-      console.log(this.imageURL);
     }
   }
 
   public async submit(event: Event) {
     event.preventDefault();
-    const data = this.constructParametersObject();
-    const formData = this.constructFormDataObject(data);
-    Axios.post("http://localhost:3000/convert", formData)
+    Axios.post("http://localhost:3000/convert", this.constructFormDataObject())
       .then(response => {
         console.log(response.data);
         console.log(response.status);
@@ -132,34 +119,11 @@ export default class Converter extends Vue {
       });
   }
 
-  private constructFormDataObject(data: any) {
-    const fd = new FormData();
-    fd.append("parameters", JSON.stringify(data));
+  private constructFormDataObject() {
+    let fd = new FormData();
+    fd = this.parameters.append(fd);
     fd.append("image", this.image, this.image.name);
     return fd;
-  }
-
-  private constructParametersObject(): any {
-    return {
-      toolDiameter: this.toolDiameter,
-      sensitivity: this.sensitivity,
-      scaleAxes: this.scaleAxes,
-      deepStep: this.deepStep,
-      whiteZ: this.whiteZ,
-      blackZ: this.blackZ,
-      safeZ: this.safeZ,
-      feedRate: {
-        work: this.work,
-        idle: this.idle
-      },
-      laserMode: this.laserMode,
-      laser: this.laserMode
-        ? {
-            commandPowerOn: this.powerOn,
-            commandPowerOff: this.powerOff
-          }
-        : null
-    };
   }
 }
 </script>
