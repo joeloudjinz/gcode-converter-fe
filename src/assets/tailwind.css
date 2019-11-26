@@ -1,0 +1,13 @@
+@tailwind base;
+
+@tailwind components;
+
+.j-base-label {
+  @apply block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2;
+}
+
+.j-base-input {
+  @apply appearance-none block w-full bg-gray-300 text-gray-700 border border-gray-500 rounded py-3 px-4 mb-3 leading-tight;
+}
+
+@tailwind utilities;
