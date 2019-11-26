@@ -66,7 +66,6 @@ import { Image } from "@/classes/image";
 
 @Component
 export default class ParametersForm extends Vue {
-  @Prop() private image: Image = new Image();
   // this is just a work around to avoid error of $parent not being an
   // instance of the exported class from the parent component
   private parent: any = this.$parent;
