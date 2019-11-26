@@ -1,13 +1,12 @@
 <template>
   <div>
-    <p>Hello</p>
     <div>
       <div class="file-upload-form">
         Upload an image file:
         <input type="file" @change="imageInputChanged" accept="image/*" />
       </div>
-      <div class="image-preview" v-if="imageURL">
-        <img :src="imageURL" />
+      <div class="image-preview" v-if="image.shouldDisplay">
+        <img :src="image.url" />
       </div>
     </div>
     <form @submit="submit">
@@ -71,23 +70,15 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { ConversionParameters } from "../classes/parameters";
+import { ConversionParameters } from "@/classes/parameters";
+import { Image } from "@/classes/image";
 
 import Axios from "axios";
 
 @Component
 export default class Converter extends Vue {
   private parameters: ConversionParameters = new ConversionParameters();
-  private image: any = null;
-  private imageURL: string = "";
-
-  public imageInputChanged(event: Event) {
-    const input: any = event.target;
-    if (input.files && input.files[0]) {
-      this.image = input.files[0];
-      this.imageURL = URL.createObjectURL(this.image);
-    }
-  }
+  private image: Image = new Image();
 
   public async submit(event: Event) {
     event.preventDefault();
@@ -118,11 +109,12 @@ export default class Converter extends Vue {
         // console.log(error.config);
       });
   }
-
+  private imageInputChanged(event: Event) {
+    this.image.setImageView(event.target);
+  }
   private constructFormDataObject() {
-    let fd = new FormData();
-    fd = this.parameters.append(fd);
-    fd.append("image", this.image, this.image.name);
+    let fd = this.parameters.append(new FormData());
+    fd = this.image.append(fd);
     return fd;
   }
 }
