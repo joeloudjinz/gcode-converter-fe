@@ -1,62 +1,7 @@
 <template>
   <div>
     <ImageForm />
-    <form @submit="submit">
-      <div>
-        <label for="toolDiameter">Tool Diameter</label>
-        <input id="toolDiameter" type="number" v-model="parameters.toolDiameter" />
-      </div>
-      <div>
-        <label for="sensitivity">Sensitivity</label>
-        <input type="number" v-model="parameters.sensitivity" min="0" max="1" step="0.01" />
-      </div>
-      <div>
-        <label for="scaleAxes">Scale Axes</label>
-        <input type="number" v-model="parameters.scaleAxes" />
-      </div>
-      <div>
-        <label for="deepStep">Deep Step</label>
-        <input type="number" v-model="parameters.deepStep" />
-      </div>
-      <div>
-        <label for="whiteZ">White Z</label>
-        <input type="number" v-model="parameters.whiteZ" />
-      </div>
-      <div>
-        <label for="blackZ">Black Z</label>
-        <input type="number" v-model="parameters.blackZ" />
-      </div>
-      <div>
-        <label for="safeZ">Safe Z</label>
-        <input type="number" v-model="parameters.safeZ" />
-      </div>
-      <div>
-        Feed rate
-        <div>
-          <label for="work">Work</label>
-          <input type="number" v-model="parameters.work" />
-        </div>
-        <div>
-          <label for="idle">Idle</label>
-          <input type="number" v-model="parameters.idle" />
-        </div>
-      </div>
-      <div>
-        Laser mode
-        <input type="checkbox" v-model="parameters.laserMode" />
-      </div>
-      <div v-if="parameters.laserMode">
-        <div>
-          <label for="safeZ">Command Power On</label>
-          <input type="text" v-model="parameters.powerOn" />
-        </div>
-        <div>
-          <label for="safeZ">Command Power Off</label>
-          <input type="text" v-model="parameters.powerOff" />
-        </div>
-      </div>
-      <input type="submit" />
-    </form>
+    <ParametersForm />
   </div>
 </template>
 
@@ -64,20 +9,19 @@
 import { Component, Vue } from "vue-property-decorator";
 import { ConversionParameters } from "@/classes/parameters";
 import ImageForm from "@/components/conversion/ImageForm.vue";
+import ParametersForm from "@/components/conversion/ParametersForm.vue";
 
 import Axios from "axios";
 
 @Component({
   components: {
-    ImageForm
+    ImageForm,
+    ParametersForm
   }
 })
 export default class Converter extends Vue {
-  private parameters: ConversionParameters = new ConversionParameters();
-
-  public async submit(event: Event) {
-    event.preventDefault();
-    Axios.post("http://localhost:3000/convert", this.constructFormDataObject())
+  public async submit(formData: FormData) {
+    Axios.post("http://localhost:3000/convert", formData)
       .then(response => {
         console.log(response.data);
         console.log(response.status);
@@ -103,12 +47,6 @@ export default class Converter extends Vue {
         }
         // console.log(error.config);
       });
-  }
-
-  private constructFormDataObject() {
-    let fd = this.parameters.append(new FormData());
-    // fd = this.image.append(fd);
-    return fd;
   }
 }
 </script>
