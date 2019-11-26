@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavigationBar />
-    <div class="container mx-auto bg-gray-200 px-10">
+    <div class="container mx-auto bg-gray-200 p-5">
       <router-view></router-view>
     </div>
   </div>
