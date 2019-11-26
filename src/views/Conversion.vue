@@ -1,14 +1,6 @@
 <template>
   <div>
-    <div>
-      <div class="file-upload-form">
-        Upload an image file:
-        <input type="file" @change="imageInputChanged" accept="image/*" />
-      </div>
-      <div class="image-preview" v-if="image.shouldDisplay">
-        <img :src="image.url" />
-      </div>
-    </div>
+    <ImageForm />
     <form @submit="submit">
       <div>
         <label for="toolDiameter">Tool Diameter</label>
@@ -71,14 +63,17 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { ConversionParameters } from "@/classes/parameters";
-import { Image } from "@/classes/image";
+import ImageForm from "@/components/conversion/ImageForm.vue";
 
 import Axios from "axios";
 
-@Component
+@Component({
+  components: {
+    ImageForm
+  }
+})
 export default class Converter extends Vue {
   private parameters: ConversionParameters = new ConversionParameters();
-  private image: Image = new Image();
 
   public async submit(event: Event) {
     event.preventDefault();
@@ -109,12 +104,10 @@ export default class Converter extends Vue {
         // console.log(error.config);
       });
   }
-  private imageInputChanged(event: Event) {
-    this.image.setImageView(event.target);
-  }
+
   private constructFormDataObject() {
     let fd = this.parameters.append(new FormData());
-    fd = this.image.append(fd);
+    // fd = this.image.append(fd);
     return fd;
   }
 }
