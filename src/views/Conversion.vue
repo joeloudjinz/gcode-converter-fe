@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>{{ msg }}</p>
+    <p>Hello</p>
     <div>
       <div class="file-upload-form">
         Upload an image file:
@@ -70,13 +70,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { ConversionParameters } from "@/classes/parameters";
+import { Component, Vue } from "vue-property-decorator";
+import { ConversionParameters } from "../classes/parameters";
+
 import Axios from "axios";
 
 @Component
 export default class Converter extends Vue {
-  @Prop() private msg!: string;
   private parameters: ConversionParameters = new ConversionParameters();
   private image: any = null;
   private imageURL: string = "";

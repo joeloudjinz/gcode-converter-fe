@@ -1,16 +1,19 @@
 <template>
-  <div id="app" class="container mx-auto bg-red-500 p-10">
-    <Converter msg="Welcome to Your Vue.js + TypeScript App" />
+  <div id="app">
+    <NavigationBar />
+    <div class="container mx-auto bg-gray-200 px-10">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Converter from "./components/Converter.vue";
+import NavigationBar from "@/components/app/Navigation.vue";
 
 @Component({
   components: {
-    Converter
+    NavigationBar
   }
 })
 export default class App extends Vue {}
