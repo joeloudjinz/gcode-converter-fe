@@ -1,8 +1,14 @@
 <template>
   <div>
     <ErrorSection v-if="doShowErrorSection" :status="error.status" :message="error.message" />
-    <ImageForm />
-    <ParametersForm />
+    <div class="flex flex-wrap">
+      <div class="w-full lg:w-1/2 px-3 mb-6">
+        <ParametersForm />
+      </div>
+      <div class="w-full lg:w-1/2 px-3 mb-6">
+        <ImageForm />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,14 +33,14 @@ export default class Converter extends Vue {
   private error: ErrorResponse = new ErrorResponse();
   public async submit(formData: FormData) {
     Axios.post("http://localhost:3000/convert", formData)
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
         console.log(response.status);
         console.log(response.statusText);
         console.log(response.headers);
         console.log(response.config);
       })
-      .catch((error) => {
+      .catch(error => {
         this.doShowErrorSection = true;
         this.error.setData(error);
       });

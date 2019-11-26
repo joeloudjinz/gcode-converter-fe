@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <div class="file-upload-form">
-      Upload an image file:
-      <input type="file" @change="imageInputChanged" accept="image/*" />
-    </div>
+  <div class="w-full h-full bg-white rounded shadow-md p-3">
     <div class="image-preview" v-if="image.shouldDisplay">
       <img :src="image.url" />
+    </div>
+    <div >
+      Upload an image file:
+      <input type="file" @change="imageInputChanged" accept="image/*" />
     </div>
   </div>
 </template>
